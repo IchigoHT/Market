@@ -30,7 +30,9 @@ const ArticulosSchema = Schema({
         type: String,
         required: [true, 'El descripcion es obligatorio']
     },
-
+    proveedor: {
+        type: Schema.ObjectId, ref: 'Proveedore'
+    },
     estado: {
         type: String,
     }

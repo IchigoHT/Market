@@ -11,8 +11,6 @@ class Server {
 
         this.usuariosPath = '/api/usuarios';
         this.authPath     = '/api/auth';
-        //this.categoriaPath     = '/api/categorias';
-        this.productoPath     = '/api/productos';
         this.proveedoresPath =   '/api/proveedores';
         this.articulosPath =   '/api/articulos';
         this.clientesPath =   '/api/clientes';
@@ -53,8 +51,6 @@ class Server {
         
         this.app.use( this.authPath, require('../routes/auth'));
         this.app.use( this.usuariosPath, require('../routes/usuarios'));
-       // this.app.use( this.categoriaPath, require('../routes/categorias'));
-        this.app.use( this.productoPath, require('../routes/productos'));
         this.app.use( this.proveedoresPath, require('../routes/proveedores'));
         this.app.use( this.articulosPath, require('../routes/articulos'));
         this.app.use( this.clientesPath, require('../routes/clientes'));

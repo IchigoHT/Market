@@ -3,6 +3,7 @@ const Usuario = require('../models/usuario');
 
 const esRoleValido = async(rol = '') => {
     console.log("ROL: " + rol);
+    
     if (rol === '') {
         console.log("ROL: " + rol);
         rol = 'USER_ROLE';

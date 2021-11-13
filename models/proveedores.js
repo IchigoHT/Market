@@ -25,6 +25,9 @@ const ProveedoresSchema = Schema({
         type: String,
         required: [true, 'El email es obligatorio']
     },
+    articulos: [
+        { type: Schema.ObjectId, ref: 'Articulo' }
+    ],
     estado: {
         type: String,
     }

@@ -3,16 +3,17 @@ const proveedores = require('../models/proveedores');
 
 const Proveedores = require('../models/proveedores');
 
-const proveedoresGet = async(req = request, res = response) => {
+const proveedoresGet = async (req = request, res = response) => {
 
     const { limite = 5, desde = 0 } = req.query;
     const query = { estado: '1' };
 
-    const [ total, proveedores ] = await Promise.all([
+    const [total, proveedores] = await Promise.all([
         Proveedores.countDocuments(query),
         Proveedores.find(query)
-            .skip( Number( desde ) )
-            .limit(Number( limite ))
+            .skip(Number(desde))
+            .limit(Number(limite))
+            .populate('articulos')
     ])
 
     console.log(proveedores);
@@ -24,8 +25,12 @@ const proveedoresGet = async(req = request, res = response) => {
 
 const proveedoresPost = async (req = request, res = response) => {
 
-    const { nombre, RFC, direccion, telefono, email} = req.body;
-    const proveedor = new Proveedores({nombre, RFC, direccion, telefono, email, estado : '1'})
+    const { nombre, RFC, direccion, telefono, email } = req.body;
+
+
+
+
+    const proveedor = new Proveedores({ nombre, RFC, direccion, telefono, email, estado: '1' })
 
     await proveedor.save();
 
@@ -34,22 +39,22 @@ const proveedoresPost = async (req = request, res = response) => {
     });
 }
 
-const proveedoresPut = async(req, res = response) => {
+const proveedoresPut = async (req, res = response) => {
 
     const { id } = req.params;
     const proveedorupdate = req.body;
 
-    const proveedor = await Proveedores.findByIdAndUpdate( id, proveedorupdate, {new: true});
+    const proveedor = await Proveedores.findByIdAndUpdate(id, proveedorupdate, { new: true });
 
     res.json(proveedor);
 }
 
-const proveedoresDelete = async(req, res = response) => {
+const proveedoresDelete = async (req, res = response) => {
 
     const { id } = req.params;
-    const proveedor = await Proveedores.findByIdAndUpdate( id, { estado: '0' } );
+    const proveedor = await Proveedores.findByIdAndUpdate(id, { estado: '0' }, { new: true });
 
-    
+
     res.json(proveedor);
 }
 
