@@ -11,6 +11,10 @@ const TiendasSchema = Schema({
         required: [true, 'El nombre es obligatorio']
     },
 
+    articulos: [
+        { type: Schema.ObjectId, ref: 'Articulo' }
+    ],
+
     estado: {
         type: String,
     }

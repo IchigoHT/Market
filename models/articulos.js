@@ -11,6 +11,10 @@ const ArticulosSchema = Schema({
         required: [true, 'El cantidad es obligatorio']
     },
 
+    tienda:{
+        type: Schema.ObjectId, ref: 'Tienda'
+    },
+
     costoVenta: {
         type: String,
         required: [true, 'La costoVenta es obligatorio']

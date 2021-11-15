@@ -14,6 +14,7 @@ const articulosGet = async (req = request, res = response) => {
         Articulos.find(query)
             .skip(Number(desde))
             .limit(Number(limite))
+            .populate("tienda")
     ])
 
     console.log(articulos);
@@ -25,7 +26,7 @@ const articulosGet = async (req = request, res = response) => {
 
 const articulosPost = async (req = request, res = response) => {
 
-    const { clave, cantidad, costoVenta, costoCompra, proveedor, perecedero, descripcion } = req.body;
+    const { clave, cantidad,tienda, costoVenta, costoCompra, proveedor, perecedero, descripcion } = req.body;
 
     const prove = await Proveedor.findById(proveedor);
 
@@ -37,7 +38,7 @@ const articulosPost = async (req = request, res = response) => {
         return res.status(404).send({ mensaje: "EL Provedor su estado es 0" })
     }
 
-    const articulo = new Articulos({ clave, cantidad, costoVenta, costoCompra, proveedor: prove, perecedero, descripcion, estado: '1' })
+    const articulo = new Articulos({ clave, cantidad,tienda, costoVenta, costoCompra, proveedor: prove, perecedero, descripcion, estado: '1' })
 
     await articulo.save();
 
@@ -61,14 +62,21 @@ const articulosPut = async (req, res = response) => {
 
     const articulo = await Articulos.findByIdAndUpdate(id, articulosupdate, { new: true });
 
+
     res.json(articulo);
 }
 
 const articulosDelete = async (req, res = response) => {
 
     const { id } = req.params;
-    const articulo = await Articulos.findByIdAndUpdate(id, { estado: '0' });
+    const articulo = await Articulos.findByIdAndUpdate(id, { estado: '0' }, { new: true });
 
+    const proveid = articulo.proveedor;
+    await Proveedor.updateOne({ "_id": proveid }, { $pull: { "articulos": articulo._id } })
+
+    console.log(proveid+" el Proveid esta mal");
+    console.log(articulo._id+"El id articulo esta mal uwu");
+    console.log(articulo);
 
     res.json(articulo);
 }
