@@ -74,9 +74,7 @@ const ventasPut = async (req, res = response) => {
 const ventasDelete = async (req, res = response) => {
 
     const { id } = req.params;
-    const venta = await Ventas.findByIdAndUpdate(id, { estado: '0' });
-
-
+    const venta = await Ventas.deleteOne({"_id":id});
     res.json(venta);
 }
 

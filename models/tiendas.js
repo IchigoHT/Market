@@ -2,6 +2,7 @@
 const { Schema, model } = require('mongoose');
 
 const TiendasSchema = Schema({
+
     ubicacion: {
         type: String,
         required: [true, 'El ubicacion es obligatorio']
@@ -11,9 +12,7 @@ const TiendasSchema = Schema({
         required: [true, 'El nombre es obligatorio']
     },
 
-    articulos: [
-        { type: Schema.ObjectId, ref: 'Articulo' }
-    ],
+    
 
     estado: {
         type: String,

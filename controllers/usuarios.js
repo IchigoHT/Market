@@ -16,6 +16,7 @@ const usuariosGet = async (req = request, res = response) => {
         Usuario.find(query)
             .skip(Number(desde))
             .limit(Number(limite))
+            .populate("tienda")
     ]);
 
     res.json({
@@ -26,8 +27,8 @@ const usuariosGet = async (req = request, res = response) => {
 
 const usuariosPost = async (req, res = response) => {
 
-    const { nombre, correo, password, rol } = req.body;
-    const usuario = new Usuario({ nombre, correo, password, rol });
+    const { nombre, correo,tienda, password, rol } = req.body;
+    const usuario = new Usuario({ nombre,tienda, correo, password, rol });
 
     // Encriptar la contraseña
     const salt = bcryptjs.genSaltSync();

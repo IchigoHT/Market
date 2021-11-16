@@ -1,6 +1,8 @@
 const { response, request } = require('express');
+const bcryptjs = require('bcryptjs');
 
 const Tiendas = require('../models/tiendas');
+const Usuario = require('../models/usuario');
 
 const TiendasGet = async (req = request, res = response) => {
 
@@ -22,16 +24,32 @@ const TiendasGet = async (req = request, res = response) => {
         tiendas
     });
 }
-
 const TiendasPost = async (req = request, res = response) => {
+    console.log(req.body);
+    const { ubicacion, nombre,correo,password} = req.body;
+    const tienda = new Tiendas({ ubicacion, nombre, estado: '1' });
 
-    const { ubicacion, nombre, articulos } = req.body;
-    const tienda = new Tiendas({ ubicacion, articulos, nombre, estado: '1' })
+    const tiendacreate = await tienda.save();
 
-    await tienda.save();
+    console.log(tienda+"esta es la tienda");
 
+
+    console.log(tiendacreate + "tienda creada");
+
+    //Creacion de usuario
+    const usuarioobject = new Usuario({ usuario: nombre, correo: correo, password: password, tienda: tiendacreate._id });
+
+    // Encriptar la contraseña
+    const salt = bcryptjs.genSaltSync();
+    usuarioobject.password = bcryptjs.hashSync(password, salt);
+
+    await Usuario.findByIdAndUpdate(req.usuario._id, { $push: { "tienda": tiendacreate._id } });
+
+    
+
+    console.log(req.usuario._id);
     res.json({
-        tienda
+        tiendacreate
     });
 }
 

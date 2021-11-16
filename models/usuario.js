@@ -15,6 +15,11 @@ const UsuarioSchema = Schema({
         type: String,
         required: [true, 'La contraseña es obligatoria'],
     },
+
+    tienda: [{
+        type: Schema.ObjectId, ref: 'Tienda'
+    }],
+
     img: {
         type: String,
     },
@@ -36,10 +41,10 @@ const UsuarioSchema = Schema({
 
 
 
-UsuarioSchema.methods.toJSON = function() {
-    const { __v, password, _id, ...usuario  } = this.toObject();
+UsuarioSchema.methods.toJSON = function () {
+    const { __v, password, _id, ...usuario } = this.toObject();
     usuario.uid = _id;
     return usuario;
 }
 
-module.exports = model( 'Usuario', UsuarioSchema );
+module.exports = model('Usuario', UsuarioSchema);
