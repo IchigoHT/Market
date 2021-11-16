@@ -24,14 +24,37 @@ const TiendasGet = async (req = request, res = response) => {
         tiendas
     });
 }
+
+const TiendasGetID = async (req = request, res = response) => {
+
+    const { limite = 5, desde = 0 } = req.query;
+
+    const query = req.params.id;
+
+    const [total, tiendas] = await Promise.all([
+        Tiendas.countDocuments(query),
+        Tiendas.findById(query)
+            .skip(Number(desde))
+            .limit(Number(limite))
+            .populate("articulos")
+
+    ])
+
+    console.log(tiendas);
+    res.json({
+        total,
+        tiendas
+    });
+}
+
 const TiendasPost = async (req = request, res = response) => {
     console.log(req.body);
-    const { ubicacion, nombre,correo,password} = req.body;
-    const tienda = new Tiendas({ ubicacion, nombre, estado: '1' });
+    const { ubicacion, nombre, articulos, correo, password } = req.body;
+    const tienda = new Tiendas({ ubicacion, articulos, nombre, estado: '1' });
 
     const tiendacreate = await tienda.save();
 
-    console.log(tienda+"esta es la tienda");
+    console.log(tienda + "esta es la tienda");
 
 
     console.log(tiendacreate + "tienda creada");
@@ -45,7 +68,7 @@ const TiendasPost = async (req = request, res = response) => {
 
     await Usuario.findByIdAndUpdate(req.usuario._id, { $push: { "tienda": tiendacreate._id } });
 
-    
+
 
     console.log(req.usuario._id);
     res.json({
@@ -77,5 +100,6 @@ module.exports = {
     TiendasPost,
     TiendasGet,
     TiendasPut,
-    TiendasDelete
+    TiendasDelete,
+    TiendasGetID
 }

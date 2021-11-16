@@ -9,6 +9,7 @@ const {
 const {
     TiendasPost,
     TiendasGet,
+    TiendasGetID,
     TiendasPut,
     TiendasDelete
 } = require('../controllers/tiendas');
@@ -17,6 +18,7 @@ const router = Router();
 
 //Listar proveedores
 router.get('/',[validarJWT], TiendasGet);
+router.get('/:id',[validarJWT], TiendasGetID);
 module.exports = router;
 
 //Guardar provedor
