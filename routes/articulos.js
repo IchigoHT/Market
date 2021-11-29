@@ -10,15 +10,20 @@ const {
     articulosPost,
     articulosGet,
     articulosPut,
+    articulosGetId,
     articulosDelete
 } = require('../controllers/articulos');
 
 const router = Router();
 
 
-//Listar proveedores
-router.get('/',[validarJWT], articulosGet);
-module.exports = router;
+//Listar articulo
+router.get('/', [validarJWT], articulosGet);
+
+
+
+//Listar articulo de Tienda ID
+router.get('/:id', [validarJWT], articulosGetId);
 
 //Guardar articulo
 router.post('/', [
@@ -41,3 +46,5 @@ router.delete('/:id', [
     validarCampos
 ], articulosDelete);
 
+
+module.exports = router;

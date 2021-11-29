@@ -37,7 +37,7 @@ const TiendasGetID = async (req = request, res = response) => {
             .skip(Number(desde))
             .limit(Number(limite))
             .populate("articulos")
-
+         
     ])
 
     console.log(tiendas);

@@ -16,6 +16,7 @@ const { usuariosGet,
     usuariosPut,
     usuariosPost,
     usuariosDelete,
+    usuariosGetID,
     usuariosPatch } = require('../controllers/usuarios');
 
 const router = Router();
@@ -23,6 +24,8 @@ const router = Router();
 
 router.get('/', validarJWT, usuariosGet);
 
+
+router.get('/:id', validarJWT, usuariosGetID);
 
 router.put('/:id', [
     validarJWT,
@@ -33,7 +36,7 @@ router.put('/:id', [
 ], usuariosPut);
 
 router.post('/', [
-    
+
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('password', 'El password debe de ser más de 6 letras').isLength({ min: 6 }),
     check('correo', 'El correo no es válido').isEmail(),

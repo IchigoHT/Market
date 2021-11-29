@@ -16,8 +16,8 @@ const {
 const router = Router();
 
 //Listar ventas
-router.get('/',[validarJWT], ventasGet);
-module.exports = router;
+router.get('/', [validarJWT], ventasGet);
+
 
 //Guardar ventas
 router.post('/', [
@@ -33,10 +33,12 @@ router.put('/:id', [
 ], ventasPut);
 
 //Eliminar ventas
-router.delete('/:id', [
+router.delete('/:id/:cantidad', [
     validarJWT,
     // esAdminRole,
     check('id', 'No es un ID válido').isMongoId(),
     validarCampos
 ], ventasDelete);
 
+
+module.exports = router;

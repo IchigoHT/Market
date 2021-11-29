@@ -24,9 +24,30 @@ const articulosGet = async (req = request, res = response) => {
     });
 }
 
+const articulosGetId = async (req = request, res = response) => {
+
+    const { limite = 5, desde = 0 } = req.query;
+    const query = req.params.id;
+
+    const [total, articulos] = await Promise.all([
+        Articulos.countDocuments(query),
+        Articulos.find({ "tienda": query })
+            .skip(Number(desde))
+            .limit(Number(limite))
+            .populate("proveedor")
+    ])
+
+    console.log(articulos);
+    res.json({
+        total,
+        articulos
+    });
+}
+
+
 const articulosPost = async (req = request, res = response) => {
 
-    const { clave, cantidad,tienda, costoVenta, costoCompra, proveedor, perecedero, descripcion } = req.body;
+    const { clave, cantidad, tienda, costoVenta, costoCompra, proveedor, perecedero, descripcion } = req.body;
 
     const prove = await Proveedor.findById(proveedor);
 
@@ -38,7 +59,7 @@ const articulosPost = async (req = request, res = response) => {
         return res.status(404).send({ mensaje: "EL Provedor su estado es 0" })
     }
 
-    const articulo = new Articulos({ clave, cantidad,tienda, costoVenta, costoCompra, proveedor: prove, perecedero, descripcion, estado: '1' })
+    const articulo = new Articulos({ clave, cantidad, tienda, costoVenta, costoCompra, proveedor: prove, perecedero, descripcion, estado: '1' })
 
     await articulo.save();
 
@@ -74,8 +95,8 @@ const articulosDelete = async (req, res = response) => {
     const proveid = articulo.proveedor;
     await Proveedor.updateOne({ "_id": proveid }, { $pull: { "articulos": articulo._id } })
 
-    console.log(proveid+" el Proveid esta mal");
-    console.log(articulo._id+"El id articulo esta mal uwu");
+    console.log(proveid + " el Proveid esta mal");
+    console.log(articulo._id + "El id articulo esta mal uwu");
     console.log(articulo);
 
     res.json(articulo);
@@ -87,5 +108,6 @@ module.exports = {
     articulosPost,
     articulosGet,
     articulosPut,
-    articulosDelete
+    articulosDelete,
+    articulosGetId
 }

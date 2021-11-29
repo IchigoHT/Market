@@ -25,10 +25,26 @@ const usuariosGet = async (req = request, res = response) => {
     });
 }
 
+
+const usuariosGetID = async (req = request, res = response) => {
+
+
+    const query = req.params.id;
+
+    const [ usuarios] = await Promise.all([
+        Usuario.findById(query)
+            .populate("tienda")
+    ]);
+
+    res.json({
+        usuarios
+    });
+}
+
 const usuariosPost = async (req, res = response) => {
 
-    const { nombre, correo,tienda, password, rol } = req.body;
-    const usuario = new Usuario({ nombre,tienda, correo, password, rol });
+    const { nombre, correo, tienda, password, rol } = req.body;
+    const usuario = new Usuario({ nombre, tienda, correo, password, rol });
 
     // Encriptar la contraseña
     const salt = bcryptjs.genSaltSync();
@@ -82,4 +98,5 @@ module.exports = {
     usuariosPut,
     usuariosPatch,
     usuariosDelete,
+    usuariosGetID
 }
