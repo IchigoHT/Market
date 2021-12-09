@@ -23,6 +23,22 @@ const proveedoresGet = async (req = request, res = response) => {
     });
 }
 
+const proveedoresGetRFC = async (req = request, res = response) => {
+
+    const rfc = req.params.rfc;
+    const query = { RFC: rfc };
+
+    const [proveedores] = await Promise.all([
+        Proveedores.find(query)
+            .populate('articulos')
+    ])
+
+    console.log(proveedores);
+    res.json({
+        proveedores
+    });
+}
+
 const proveedoresPost = async (req = request, res = response) => {
 
     const { nombre, RFC, direccion, telefono, email } = req.body;
@@ -63,5 +79,6 @@ module.exports = {
     proveedoresPost,
     proveedoresGet,
     proveedoresPut,
-    proveedoresDelete
+    proveedoresDelete,
+    proveedoresGetRFC
 }

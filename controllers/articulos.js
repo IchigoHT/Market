@@ -3,6 +3,7 @@ const articulos = require('../models/articulos');
 
 const Proveedor = require('../models/proveedores');
 const Articulos = require('../models/articulos');
+const Tienda = require('../models/tiendas');
 
 const articulosGet = async (req = request, res = response) => {
 
@@ -15,6 +16,8 @@ const articulosGet = async (req = request, res = response) => {
             .skip(Number(desde))
             .limit(Number(limite))
             .populate("tienda")
+            .populate("proveedor")
+
     ])
 
     console.log(articulos);
@@ -49,7 +52,10 @@ const articulosPost = async (req = request, res = response) => {
 
     const { clave, cantidad, tienda, costoVenta, costoCompra, proveedor, perecedero, descripcion } = req.body;
 
-    const prove = await Proveedor.findById(proveedor);
+
+    const bProve = await Proveedor.find({ "RFC": proveedor })
+    console.log(bProve._id);
+    const prove = await Proveedor.findById(bProve);
 
     if (!prove) {
         return res.status(404).send({ mensaje: "EL Provedor no existe" })
@@ -68,8 +74,9 @@ const articulosPost = async (req = request, res = response) => {
     console.log(prove._id);
     console.log(idarticulo);
 
-
     await Proveedor.updateOne({ _id: prove._id }, { $push: { articulos: idarticulo } }, { new: true });
+
+    await Tienda.updateOne({ _id: tienda }, { $push: { articulos: idarticulo } }, { new: true });
 
     return res.json({
         articulo

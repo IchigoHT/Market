@@ -37,7 +37,7 @@ const TiendasGetID = async (req = request, res = response) => {
             .skip(Number(desde))
             .limit(Number(limite))
             .populate("articulos")
-         
+
     ])
 
     console.log(tiendas);
@@ -49,31 +49,19 @@ const TiendasGetID = async (req = request, res = response) => {
 
 const TiendasPost = async (req = request, res = response) => {
     console.log(req.body);
-    const { ubicacion, nombre, articulos, correo, password } = req.body;
+    const { ubicacion, nombre, articulos } = req.body;
     const tienda = new Tiendas({ ubicacion, articulos, nombre, estado: '1' });
 
-    const tiendacreate = await tienda.save();
+    const tiendanew = await tienda.save();
+    console.log(tiendanew._id);
+    await Usuario.findOneAndUpdate({ rol: "ADMIN_ROLE" }, { $push: { "tienda": tiendanew._id } })
 
     console.log(tienda + "esta es la tienda");
 
-
-    console.log(tiendacreate + "tienda creada");
-
-    //Creacion de usuario
-    const usuarioobject = new Usuario({ usuario: nombre, correo: correo, password: password, tienda: tiendacreate._id });
-
-    // Encriptar la contraseña
-    const salt = bcryptjs.genSaltSync();
-    usuarioobject.password = bcryptjs.hashSync(password, salt);
-
-    await Usuario.findByIdAndUpdate(req.usuario._id, { $push: { "tienda": tiendacreate._id } });
-
-
-
-    console.log(req.usuario._id);
     res.json({
-        tiendacreate
+        tienda: tiendanew
     });
+
 }
 
 const TiendasPut = async (req, res = response) => {

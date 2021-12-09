@@ -10,14 +10,15 @@ const {
     proveedoresPost,
     proveedoresGet,
     proveedoresPut,
+    proveedoresGetRFC,
     proveedoresDelete
 } = require('../controllers/proveedores');
 
 const router = Router();
 
 //Listar proveedores
-router.get('/',[validarJWT], proveedoresGet);
-module.exports = router;
+router.get('/', [validarJWT], proveedoresGet);
+router.get('/:rfc', [validarJWT], proveedoresGetRFC);
 
 //Guardar provedor
 router.post('/', [
@@ -40,3 +41,4 @@ router.delete('/:id', [
     validarCampos
 ], proveedoresDelete);
 
+module.exports = router;
